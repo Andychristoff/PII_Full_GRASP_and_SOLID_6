@@ -9,27 +9,26 @@ using System.Collections.Generic;
 
 namespace Full_GRASP_And_SOLID
 {
-    public class Recipe : CountdownTimer, IRecipeContent, TimerClient // Modificado por DIP
+    public class Recipe : IRecipeContent // Modificado por DIP
     {
         // Cambiado por OCP
         private IList<BaseStep> steps = new List<BaseStep>();
 
         public Product FinalProduct { get; set; }
 
-        TimerClient client;
+        Client client;
+
+        CountdownTimer timer;
 
         public bool Cooked { get; set;}
 
-        public void TimeOut()
-        {
-            this.Cooked=true;
-        }
         public  void Cook()
         {
+            this.timer= new CountdownTimer();
+            this.client= new Client(this);
             int a = this.GetCookTime();
-            CountdownTimer.Register(a, this);
+            this.timer.Register(a, this.client);
         }
-
         public int GetCookTime()
         {
             int cooktime = 0;
